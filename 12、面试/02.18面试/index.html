@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>接口重试测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px }
+        .test-case { margin: 10px 0; padding: 10px; border: 1px solid #ccc }
+        button { margin-right: 10px }
+        .status { margin-left: 10px }
+        .success { color: green }
+        .error { color: red }
+    </style>
+</head>
+<body>
+    <h2>接口测试 (http://localhost:7001/)</h2>
+    
+    <!-- 测试控制台 -->
+    <div class="test-case">
+        <button onclick="testGet()">测试GET请求</button>
+        <button onclick="testPost()">测试POST请求</button>
+        <button onclick="testTimeout()">测试超时重试</button>
+    </div>
+
+    <div id="result" class="status"></div>
+
+    <script>
+        // 带重试的请求核心函数
+        function execQuery(query, times) {
+            const control = new AbortController();
+            return new Promise((resolve, reject) => {
+                const timeoutId = setTimeout(() => {
+                    control.abort();
+                }, 3000);
+
+                query({ signal: control.signal })
+                    .then(response => {
+                        clearTimeout(timeoutId);
+                        if (!response.ok) {
+                            throw new Error(`HTTP错误 ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => resolve(data))
+                    .catch(error => {
+                        clearTimeout(timeoutId);
+                        if (times > 0) {
+                            console.log(`请求失败，剩余重试次数: ${times}`);
+                            execQuery(query, times - 1).then(resolve).catch(reject);
+                        } else {
+                            reject(error);
+                        }
+                    });
+            });
+        }
+
+        // 通用请求方法
+        function createRequest(method = 'GET', body = null) {
+            return ({ signal }) => fetch('http://localhost:7001/', {
+                method,
+                headers: body ? { 'Content-Type': 'application/json' } : {},
+                body: body ? JSON.stringify(body) : null,
+                signal
+            });
+        }
+
+        // 测试用例
+        async function testGet() {
+            try {
+                const result = await execQuery(
+                    createRequest('GET'), 
+                    2 // 最多重试2次
+                );
+                showResult(`GET成功: ${JSON.stringify(result)}`, 'success');
+            } catch (error) {
+                showResult(`GET失败: ${error.message}`, 'error');
+            }
+        }
+
+        async function testPost() {
+            try {
+                const result = await execQuery(
+                    createRequest('POST', { test: Date.now() }),
+                    1
+                );
+                showResult(`POST成功: ${JSON.stringify(result)}`, 'success');
+            } catch (error) {
+                showResult(`POST失败: ${error.message}`, 'error');
+            }
+        }
+
+        async function testTimeout() {
+            try {
+                // 模拟慢速请求（4秒响应）
+                const result = await execQuery(
+                    ({ signal }) => fetch('http://localhost:7001/slow-api', { signal }),
+                    2
+                );
+                showResult(`超时测试成功: ${JSON.stringify(result)}`, 'success');
+            } catch (error) {
+                showResult(`超时测试失败: ${error.message}`, 'error');
+            }
+        }
+
+        // 结果显示
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.className = `status ${type}`;
+            console.log(`[${new Date().toLocaleTimeString()}] ${message}`);
+        }
+    </script>
+</body>
+</html>

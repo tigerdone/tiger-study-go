@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>可调整大小的分栏布局</title>
+    <style>
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .left-pane {
+            background-color: #f0f0f0;
+            min-width: 100px;  /* 最小宽度限制 */
+        }
+
+        .divider {
+            width: 5px;
+            background-color: #ccc;
+            cursor: col-resize;
+            position: relative;
+        }
+
+        .right-pane {
+            background-color: #fff;
+            flex: 1;
+            min-width: 100px;  /* 最小宽度限制 */
+        }
+
+        /* 内容样式示例 */
+        .content {
+            padding: 20px;
+            height: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-pane">
+            <div class="content">
+                <h2>左侧内容</h2>
+                <p>尝试拖动中间的分隔条</p>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="right-pane">
+            <div class="content">
+                <h2>右侧内容</h2>
+                <p>支持响应式调整大小</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const divider = document.querySelector('.divider');
+        const container = document.querySelector('.container');
+        const leftPane = document.querySelector('.left-pane');
+        let isDragging = false;
+
+        // 鼠标按下事件
+        divider.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            document.body.style.cursor = 'col-resize';  // 全局光标样式
+        });
+
+        // 鼠标移动事件
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const containerRect = container.getBoundingClientRect();
+            // 计算鼠标位置相对于容器的百分比
+            const percent = (e.clientX - containerRect.left) / containerRect.width * 100;
+            
+            // 设置左右分栏宽度（保留最小宽度）
+            leftPane.style.width = `calc(${Math.max(5, Math.min(95, percent))}% - 2px)`;
+            divider.style.left = `${percent}%`;
+        });
+
+        // 鼠标释放事件
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            document.body.style.cursor = 'default';
+        });
+    </script>
+</body>
+</html>

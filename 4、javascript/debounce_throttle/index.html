@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./index.js"></script>
+  <style>
+    div {
+      width: 100px;
+      height: 1000px;
+      background-color: red;
+    }
+  </style>
+</head>
+<body>
+  <div>inner</div>
+
+  <input id="input" type="text">
+  
+
+  <script>
+    // 防抖
+    function debounce(fn) {
+      let timer;
+
+      return (...args) => {
+        if (timer) {
+          clearTimeout(timer);
+        }
+
+        timer = setTimeout(() => {
+          fn.apply(this, args);
+          timer = null;
+        }, 1000);
+      }
+    }
+    const inputLog = debounce((e) => {
+      console.log(e.target.value);
+    });
+    document.getElementById('input').addEventListener('input', inputLog)
+
+    // 节流
+    function throttle(fn) {
+      let executed = false;
+
+      return (...args) => {
+        if (!executed) {
+          fn.apply(this, args);
+          executed = true;
+          timer = setTimeout(() => {
+            executed = false;
+          }, 1000);
+        }
+      }
+    }
+    const scrollLog = throttle((e) => {
+      console.log('scrolling', e.target.value);
+    });
+    document.addEventListener('scroll', scrollLog)
+
+  </script>
+</body>
+</html>

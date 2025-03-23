@@ -1,0 +1,16 @@
+CACHE MANIFEST
+# 版本号，每次更新资源时可修改此版本号，用于告知浏览器资源有更新
+VERSION: 1
+
+# 需要缓存的资源列表
+CACHE:
+index.html
+image.jpg
+script.js
+
+# 可选的，用于指定在离线状态下可访问的备用页面，如果当前页面无法加载，浏览器将尝试加载此备用页面
+FALLBACK:
+/ /offline.html
+
+# 可选的，用于指定哪些资源不需要被缓存，这里没有需要排除的资源，所以为空
+NETWORK:

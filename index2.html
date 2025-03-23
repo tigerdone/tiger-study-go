@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+       /* 填写样式 */
+       .textarea {
+        height: 200px;
+        width: 300px;
+       }
+    </style>
+</head>
+
+<body>
+    <!-- 填写标签 -->
+    <p>
+        待匹配的文本：
+    </p>
+    <section>
+        <!-- <textarea multiple class="input" /> -->
+        <textarea class="textarea" name="input" id="textarea"></textarea>
+    </section>
+
+    <script type="text/javascript">
+        // 填写JavaScript
+        function submit(event) {
+            console.log('event', event);
+        }
+    </script>
+    <form action="submit" >
+        <span>
+            正则表达式
+        </span>
+        <input multiple class="input" id="input" name="input"/>
+        <label for="select">全局搜索</label>
+        <select name="select" id="select" type="radio">
+            <option value="true">是</option>
+            <option value="false">否</option>
+        </select>
+
+        <label for="select">是否大小写</label>
+        <select name="select" id="select" type="radio">
+            <option value="true">是</option>
+            <option value="false">否</option>
+        </select>
+        <button >
+            计算
+        </button>
+    </form>
+        <p>
+            匹配结果
+        </p>
+        <p>
+
+        </p>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

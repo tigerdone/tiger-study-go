@@ -1,0 +1,3 @@
+function findTiger() {
+  console.log()
+}

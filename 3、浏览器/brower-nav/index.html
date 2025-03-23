@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button id="button">测试按钮</button>
+  <script>
+        // 写出下述程序的输出结果
+        const btn = document.getElementById('button');
+    function test() {
+        console.log('function test!');
+        Promise.resolve().then(() => {
+            console.log('promise1');
+        });
+    }
+    
+    setTimeout(() => {
+        console.log('set timer');
+        Promise.resolve().then(test);
+    }, 0);
+    
+    btn.onclick = () => {
+        console.log('click button');
+    };
+    
+    btn.click();
+    
+    Promise.resolve().then(() => {
+        console.log('promise2');
+    });
+    
+    console.log('script start');
+    
+    // 输出结果依次为：
+    // click button
+    // script start
+    // promise2
+    // set timer
+    // function test!
+    // promise1
+
+  </script>
+</body>
+</html>

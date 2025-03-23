@@ -1,0 +1,28 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+  <script>
+    const jsonp = (url, params, callback) => {
+      const script = document.createElement('script');
+      script.src = url + '?' + params + '&callback=' + callback;
+      document.body.appendChild(script);
+      script.onload = () => {
+        document.body.removeChild(script);
+      }
+
+      window[callback] = (data) => {
+        console.log(JSON.parse(data));
+      }
+    }
+    jsonp('http://localhost:3001/api/jsonp', 'name=zs', 'callback' + Date.now());
+  </script>
+</body>
+</html>

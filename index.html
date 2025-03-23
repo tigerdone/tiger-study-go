@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        #container {
+            width: 600px;
+            height: 300px;
+            overflow: hidden;
+            border: 1px solid black;
+            position: relative;
+        }
+
+        #ball {
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 2em;
+            transition: all;
+        }
+        #startButton {
+            position: absolute;
+            left: 260px;
+            top: 10px;
+        }        
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <button id="startButton">开始动画</button>
+        <div id="ball">⚫</div>
+    </div> 
+    <script type="text/javascript">
+        // 填写JavaScript
+        document.querySelector('#startButton').addEventListener('click', test_ball);
+        function test_ball(){
+          // let i = 0;
+          let v_x = 10; // x 轴速度
+          let v_y = 0; // y 轴速度
+          let top = 0;
+          let left = 0;
+          let G = 10;
+          setInterval(() => {
+            // i++;
+
+            if (top >= 300) {
+              v_y *= -1;
+            }
+            left += v_x;
+            v_y += G;
+            top += v_y / 2;
+
+
+            document.querySelector('#ball').setAttribute('style', `top:${top}px;left:${left}px;`);
+          }, 50)
+          return true;
+        }
+    </script>
+</body>
+
+</html>

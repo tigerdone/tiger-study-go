@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Web Worker示例</title>
+</head>
+
+<body>
+    <h1>Web Worker示例</h1>
+    <p>点击按钮开始执行耗时任务，页面不会被阻塞哦~</p>
+    <button id="startButton">开始任务</button>
+    <p id="resultText"></p>
+
+    <script>
+        // 创建一个Web Worker实例，指定worker.js为其执行的脚本文件
+        const myWorker = new Worker('worker.js');
+
+        // 获取页面上的按钮和用于显示结果的段落元素
+        const startButton = document.getElementById('startButton');
+        const resultText = document.getElementById('resultText');
+
+        // 当按钮被点击时，向Web Worker发送消息，通知它开始执行任务
+        startButton.onclick = function () {
+            myWorker.postMessage('start');
+        };
+
+        // 监听Web Worker发回的消息，当收到消息时，将结果显示在页面上
+        myWorker.onmessage = function (e) {
+            resultText.textContent = '任务结果：' + e.data;
+        };
+    </script>
+</body>
+
+</html>
